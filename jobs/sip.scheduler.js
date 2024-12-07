@@ -42,10 +42,10 @@ class SIPScheduler {
             for (const sip of (sips || [])) {
                 const schedulerId = `sip-scheduler-${sip.id}`;
                 if (!existingSchedulerIds.has(schedulerId)) {
-                    console.log(`Creating new scheduler for SIP ${sip.id}`);
+                    console.log(`Creating new scheduler for SIP ${sip.id || sip.sip_id}`);
                     await this.createSIPScheduler(sip);
                 } else {
-                    console.log(`Scheduler already exists for SIP ${sip.id}`);
+                    console.log(`Scheduler already exists for SIP ${sip.id || sip.sip_id}`);
                     // Optionally update the existing scheduler if needed
                     await this.updateSIPScheduler(sip);
                 }
@@ -54,8 +54,8 @@ class SIPScheduler {
             // Remove schedulers for inactive SIPs
             const activeIds = new Set(sips.map(sip => `sip-scheduler-${sip.id}`));
             for (const scheduler of existingSchedulers) {
-                if (scheduler.id.startsWith('sip-scheduler-') && !activeIds.has(scheduler.id)) {
-                    console.log(`Removing scheduler for inactive SIP: ${scheduler.id}`);
+                if (scheduler?.id?.startsWith('sip-scheduler-') && !activeIds.has(scheduler.id)) {
+                    console.log(`Removing scheduler for inactive SIP: ${scheduler.id || scheduler.sip_id}`);
                     await this.queue.removeJobScheduler(scheduler.id);
                 }
             }
@@ -89,16 +89,18 @@ class SIPScheduler {
     async createSIPScheduler(sip) {
         try {
             // const pattern = this.getSchedulerPattern(sip.frequency, sip.next_execution);
-            const pattern = '* * * * *'
-            console.log(`Creating scheduler for SIP ${sip.id} with pattern: ${pattern}`);
+            const pattern = "* * * * *";
+            console.log(
+                `Creating scheduler for SIP ${sip.id || sip.sip_id} with pattern: ${pattern}`
+            );
 
             const firstJob = await this.queue.upsertJobScheduler(
-                `sip-scheduler-${sip.id}`,
+                `sip-scheduler-${sip.id ? sip.id : sip.sip_id}`,
                 { pattern },
                 {
                     name: 'execute-sip',
                     data: {
-                        sip_id: sip.id,
+                        sip_id: sip.sip_id ? sip.sip_id : sip.id,
                         frequency: sip.frequency,
                         scheduled_time: sip.next_execution
                     },
@@ -114,7 +116,7 @@ class SIPScheduler {
                 }
             );
 
-            console.log(`Created scheduler for SIP ${sip.id}, first job ID: ${firstJob.id}`);
+            console.log(`Created scheduler for SIP ${sip.id || sip.sip_id}, first job ID: ${firstJob.id}`);
             return firstJob;
         } catch (error) {
             console.error(`Error creating scheduler for SIP ${sip.id}:`, error);
@@ -167,7 +169,7 @@ class SIPScheduler {
         setInterval(async () => {
             console.log('Running periodic scheduler check...');
             await this.schedulePendingSIPs();
-        }, 60 * 60 * 1000); // Every hour
+        }, 10 * 60 * 1000); // Every 10 minutes
     }
 
     async stop() {
