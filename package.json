@@ -12,10 +12,12 @@
   "dependencies": {
     "@coinbase/coinbase-sdk": "^0.11.2",
     "@supabase/supabase-js": "^2.39.0",
+    "alchemy-sdk": "^2.11.0",
     "bullmq": "^5.31.2",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
+    "ethers": "^6.11.1",
     "express": "^4.21.2",
     "ioredis": "^5.4.1"
   }
