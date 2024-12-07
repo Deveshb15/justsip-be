@@ -11,8 +11,10 @@ const QUEUE_NAME = 'sip-execution';
 const worker = new Worker(
     QUEUE_NAME,
     async (job) => {
-        const { sip_id, frequency, scheduled_time } = job.data;
-        console.log(`Processing SIP execution for ID: ${sip_id} scheduled for ${scheduled_time}`);
+        console.log("JOB DATA", job.data);
+
+        const { sip_id, frequency } = job.data;
+        console.log(`Processing SIP execution for ID: ${sip_id} with frequency: ${frequency}`);
 
         try {
             // First check if SIP exists in database

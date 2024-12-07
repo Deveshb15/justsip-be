@@ -94,6 +94,8 @@ class SIPScheduler {
                 `Creating scheduler for SIP ${sip.id || sip.sip_id} with pattern: ${pattern}`
             );
 
+            console.log("SIP IN SCHEDULER", sip);
+
             const firstJob = await this.queue.upsertJobScheduler(
                 `sip-scheduler-${sip.id ? sip.id : sip.sip_id}`,
                 { pattern },
@@ -102,7 +104,6 @@ class SIPScheduler {
                     data: {
                         sip_id: sip.sip_id ? sip.sip_id : sip.id,
                         frequency: sip.frequency,
-                        scheduled_time: sip.next_execution
                     },
                     opts: {
                         attempts: 3,
