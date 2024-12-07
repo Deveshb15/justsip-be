@@ -1,8 +1,21 @@
 const express = require('express');
 const walletController = require('./lib/controllers/wallet.controller');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
+
+// More specific CORS configuration
+const corsOptions = {
+  origin: '*', // or specify allowed origins like ['http://localhost:3000', 'https://yourapp.com']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Wallet routes
@@ -18,6 +31,7 @@ app.get('/trades/:wallet_id', walletController.getTradeHistory.bind(walletContro
 app.post('/sip', walletController.createSIP.bind(walletController));
 app.get('/sip/:wallet_id', walletController.getSIPs.bind(walletController));
 app.put('/sip/:wallet_id/:sip_id/status', walletController.updateSIPStatus.bind(walletController));
+app.put('/sip/:wallet_id/:sip_id', walletController.updateSIP.bind(walletController));
 app.post('/sip/:sip_id/execute', walletController.executeSIP.bind(walletController));
 app.delete('/sip/:wallet_id/:sip_id', walletController.deleteSIP.bind(walletController));
 
