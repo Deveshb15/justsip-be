@@ -89,7 +89,8 @@ class SIPScheduler {
     async createSIPScheduler(sip) {
         try {
             // const pattern = this.getSchedulerPattern(sip.frequency, sip.next_execution);
-            const pattern = "* * * * *";
+            // const pattern = "* * * * *"; // every minute
+            const pattern = "*/3 * * * *"
             console.log(
                 `Creating scheduler for SIP ${sip.id || sip.sip_id} with pattern: ${pattern}`
             );
