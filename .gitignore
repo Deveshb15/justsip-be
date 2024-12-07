@@ -2,3 +2,5 @@
 node_modules
 
 .DS_Store
+
+cdp_api_key.json
