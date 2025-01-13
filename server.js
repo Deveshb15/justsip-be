@@ -7,7 +7,7 @@ const app = express();
 
 // More specific CORS configuration
 const corsOptions = {
-  origin: '*', // or specify allowed origins like ['http://localhost:3000', 'https://yourapp.com']
+  origin: ['https://www.justsip.xyz', 'https://justsip.xyz', 'http://localhost:3000'], // Add all your allowed domains
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -17,6 +17,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://www.justsip.xyz');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
 
 // Wallet routes
 app.post('/create-wallet', walletController.createWallet.bind(walletController));
